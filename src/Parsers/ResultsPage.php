@@ -27,7 +27,7 @@ class ResultsPage extends AbstractParser
     protected function generateContent()
     {
         $configArray = $this->getConfigArray();
-        $categories = $this->getParameter('raceCategories');
+        $categories = $this->getParameter('raceCategories', []);
         $results = $this->parseResults($configArray, $categories);
 
         return [
@@ -66,7 +66,7 @@ class ResultsPage extends AbstractParser
         ];
 
         /** @var RaceCategory $category */
-        $category = $categories[$config['raceID']];
+        $category = isset($categories[$config['raceID']]) ? $categories[$config['raceID']] : [];
         if ($category instanceof RaceCategory) {
             $parameters['category'] = $category->getName();
             $parameters['gender'] = $this->parseGenderFromCategory($category);
@@ -74,7 +74,7 @@ class ResultsPage extends AbstractParser
 
         $parameters['posCategory'] = $config['raceStanding'];
         $parameters['posGender'] = $config['raceCategoryStanding'];
-        $parameters['time'] = $config['duration'];
+        $parameters['time'] = $config['duration'] / 100;
         $parameters['bib'] = $config['raceNumber'];
         $parameters['id'] = $config['raceParticipantID'];
 
