@@ -18,9 +18,21 @@ class ResultsPageTest extends AbstractPageTest
         static::assertInstanceOf(Crawler::class, $crawler);
 
         static::assertSame(
-            'https://my.raceresult.com/RRPublish/data/list.php?callback=jQuery&page=results&eventid=122816&key=a615286c279b6fcfaf20b3816f2e2943&listname=Result Lists|Gender Results&contest=1',
+            'https://app.liniadesosire.ro:8443/FinishLine.Application/races/results?page=0&pageSize=9000&searchCriteria=&raceID=1184',
             $crawler->getUri()
         );
+    }
+
+    public function testGetCrawlerHtml()
+    {
+        $scrapper = $this->generateScraper();
+
+        static::assertInstanceOf(ResultsPage::class, $scrapper);
+        $scrapper->execute();
+        $content = $scrapper->getClient()->getResponse()->getContent();
+
+        static::assertContains('Muresan', $content);
+//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/ResultsPage/default.json', $content);
     }
 
     /**
@@ -40,13 +52,12 @@ class ResultsPageTest extends AbstractPageTest
     protected function generateScraper($parameters = [])
     {
         $default = [
-            'eventId' => '122816',
-            'key' => 'a615286c279b6fcfaf20b3816f2e2943',
-            'contest' => '1',
-            'listname' => 'Result Lists|Gender Results'
+            'eventId' => '77',
+            'raceId' => '184',
+            'page' => '2'
         ];
         $params = count($parameters) ? $parameters : $default;
-        $params['raceClient'] = new \Sportic\Omniresult\LiniaDeSosire\RaceResultsClient();
+        $params['raceClient'] = new \Sportic\Omniresult\LiniaDeSosire\LiniaDeSosireClient();
         $scraper = new ResultsPage();
         $scraper->initialize($params);
         return $scraper;
