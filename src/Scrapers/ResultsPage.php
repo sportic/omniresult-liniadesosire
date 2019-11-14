@@ -2,6 +2,8 @@
 
 namespace Sportic\Omniresult\LiniaDeSosire\Scrapers;
 
+use Sportic\Omniresult\Common\Content\ListContent;
+use Sportic\Omniresult\Common\Models\RaceCategory;
 use Sportic\Omniresult\LiniaDeSosire\Parsers\EventPage as Parser;
 
 /**
@@ -23,37 +25,45 @@ class ResultsPage extends AbstractScraper
     /**
      * @return mixed
      */
-    public function getKey()
+    public function getRaceId()
     {
-        return $this->getParameter('key');
+        return $this->getParameter('raceId');
+    }
+
+    /**
+     * @return RaceCategory[]
+     */
+    public function getRaceCategories()
+    {
+        if (!$this->hasParameter('raceCategories')) {
+            /** @var ListContent $eventReturn */
+            $eventReturn = $this->getParameter('raceClient')->event(['eventId' => $this->getEventId()])->getContent();
+            $races = $eventReturn->getRecords();
+            $race = $races[$this->getRaceId()];
+            $this->setParameter('raceCategories', $race->getParameter('categories'));
+        }
+        return $this->getParameter('raceCategories', []);
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->getParameter('page', 1);
     }
 
     /**
      * @return mixed
      */
-    public function getContest()
+    public function getRaceCategoryId()
     {
-        return $this->getParameter('contest');
+        $selected = array_slice($this->getRaceCategories(), $this->getPage() -1 , 1);
+        if (!count($selected)) {
+            return 0;
+        }
+        return reset($selected)->getId();
     }
-
-    /**
-     * @return mixed
-     */
-    public function getListName()
-    {
-        return $this->getParameter('listname');
-    }
-
-    /**
-     * @return string
-     */
-    public function getCrawlerUri()
-    {
-        return $this->getCrawlerUriHost()
-            . '/FinishLine.Application/races/results?page=0&pageSize=30&searchCriteria='
-            . '&raceID=' . $this->getEventId();
-    }
-
 
     /**
      * @inheritdoc
@@ -62,16 +72,18 @@ class ResultsPage extends AbstractScraper
     {
         $data = parent::generateParserData();
 
-        $currentListName = $this->getListName();
-        $contest = $this->getContest();
-
-        $dataEvent = $this->getParameter('raceClient')->event(['eventId' => $this->getEventId()])->getContent();
-        $races = $dataEvent ->getRecords();
-
-        $list = $races[$contest]->lists[$currentListName];
-
-        $data['listDetails'] = $list['Details'];
-
+        $data['page'] = $this->getPage();
+        $data['raceCategories'] = $this->getRaceCategories();
         return $data;
+    }
+
+        /**
+     * @return string
+     */
+    public function getCrawlerUri()
+    {
+        return $this->getCrawlerUriHost()
+            . '/FinishLine.Application/races/results?page=0&pageSize=9000&searchCriteria='
+            . '&raceID=' . $this->getRaceCategoryId();
     }
 }

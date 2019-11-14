@@ -29,32 +29,6 @@ class EventPage extends AbstractScraper
     }
 
     /**
-     * @inheritdoc
-     */
-    protected function generateCrawler()
-    {
-        $client = $this->getClient();
-        $crawler = $client->request(
-            'GET',
-            $this->getCrawlerUri()
-        );
-
-        return $crawler;
-    }
-
-    /**
-     * @return array
-     */
-    protected function generateParserData()
-    {
-        $this->getRequest();
-
-        return [
-            'response' => $this->getClient()->getResponse(),
-        ];
-    }
-
-    /**
      * @return string
      */
     public function getCrawlerUri()

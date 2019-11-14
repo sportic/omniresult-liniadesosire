@@ -2,9 +2,11 @@
 
 namespace Sportic\Omniresult\LiniaDeSosire\Parsers;
 
+use Nip\Utility\Arr;
 use Sportic\Omniresult\Common\Content\ParentListContent;
 use Sportic\Omniresult\Common\Models\Event;
 use Sportic\Omniresult\Common\Models\Race;
+use Sportic\Omniresult\Common\Models\RaceCategory;
 use Sportic\Omniresult\LiniaDeSosire\Parsers\Traits\HasJsonConfigTrait;
 
 /**
@@ -28,6 +30,8 @@ class EventPage extends AbstractParser
             'record' => $this->parseEvent($configArray['sportEvent']),
             'records' => $this->parseRaces($configArray['numberCategories'])
         ];
+
+        $this->parseRacesCategories($params['records'], $configArray['races']);
 
         return $params;
     }
@@ -55,14 +59,57 @@ class EventPage extends AbstractParser
     public function parseRaces($config)
     {
         $racesArray = $config;
-        $races = [];
+        $return = [];
         foreach ($racesArray as $raceItem) {
-            $races[$raceItem['externalId']] = [
-                'id' =>$raceItem['id'],
-                'name' =>$raceItem['name'],
-            ];
+            $return[$raceItem['id']] = $this->parseRace($raceItem);
         }
-        return $races;
+        return $return;
+    }
+
+    /**
+     * @param $raceItem
+     * @return Race
+     */
+    protected function parseRace($raceItem)
+    {
+        $config = [
+            'id' => $raceItem['id'],
+            'name' => $raceItem['name'],
+            'externalId' => $raceItem['externalId'],
+            'rangeStart' => $raceItem['rangeStart'],
+            'rangeStop' => $raceItem['rangeStop'],
+        ];
+
+        return new Race($config);
+    }
+
+    /**
+     * @param Race[] $races
+     * @param $categoriesArray
+     */
+    protected function parseRacesCategories($races, $categoriesArray)
+    {
+        $raceCategories = [];
+        foreach ($categoriesArray as $categoryArray) {
+            $category = new RaceCategory([
+                'id' => $categoryArray['id'],
+                'name' => $categoryArray['name'],
+                'gender' => $categoryArray['gender'],
+                'ageStart' => $categoryArray['ageStart'],
+                'ageEnd' => $categoryArray['ageEnd']
+            ]);
+
+            $raceCategories[$categoryArray['numberCategory']['id']][$category->getId()] = $category;
+        }
+        foreach ($races as $race) {
+            $categories = (isset($raceCategories[$race->getId()]))
+                ? $raceCategories[$race->getId()]
+                : [];
+
+            $categoriesString = implode(',', array_keys($categories));
+            $race->setParameter('categories', $categories);
+            $race->setParameter('categoriesString', $categoriesString);
+        }
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection
@@ -73,7 +120,7 @@ class EventPage extends AbstractParser
         return ParentListContent::class;
     }
 
-    /** @noinspection PhpMissingParentCallCommonInspection
+    /**
      * @inheritdoc
      */
     public function getModelClassName()
