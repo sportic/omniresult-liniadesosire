@@ -74,7 +74,7 @@ class ResultsPage extends AbstractParser
 
         $parameters['posCategory'] = $config['raceStanding'];
         $parameters['posGender'] = $config['raceCategoryStanding'];
-        $parameters['posGen'] = $config['raceCategoryStanding'];
+        
         $parameters['time'] = Helper::durationToSeconds($config['duration']);
         $parameters['bib'] = $config['raceNumber'];
         $parameters['id'] = $config['raceParticipantID'];
