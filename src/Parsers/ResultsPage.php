@@ -74,9 +74,12 @@ class ResultsPage extends AbstractParser
 
         $parameters['posCategory'] = $config['raceStanding'];
         $parameters['posGender'] = $config['raceCategoryStanding'];
+        $parameters['posGen'] = $config['raceCategoryStanding'];
         $parameters['time'] = Helper::durationToSeconds($config['duration']);
         $parameters['bib'] = $config['raceNumber'];
         $parameters['id'] = $config['raceParticipantID'];
+
+        $parameters['status'] = $this->parseStatus($config);
 
         return new Result($parameters);
     }
@@ -95,6 +98,31 @@ class ResultsPage extends AbstractParser
             return 'male';
         }
         return '';
+    }
+
+    /**
+     * @param $config
+     * @return string|null
+     */
+    protected function parseStatus($config)
+    {
+        if ($config['hasAbandoned'] == true) {
+            return 'DNF';
+        }
+
+        if ($config['hasStarted'] === false) {
+            return 'DNS';
+        }
+
+        if ($config['finishTime'] === null) {
+            return 'DNF';
+        }
+
+        if ($config['duration'] === 0) {
+            return 'DNF';
+        }
+
+        return null;
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection

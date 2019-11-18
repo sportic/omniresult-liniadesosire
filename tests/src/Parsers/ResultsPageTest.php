@@ -22,7 +22,7 @@ class ResultsPageTest extends AbstractPageTest
 
         /** @var Result $record */
         $records = $parametersParsed->getRecords();
-        self::assertCount(46, $records);
+        self::assertCount(48, $records);
 
         $record = $records[10];
 
@@ -30,9 +30,14 @@ class ResultsPageTest extends AbstractPageTest
         self::assertEquals('Pentek', $record->getFirstName());
         self::assertEquals('Raul', $record->getLastName());
 
-        self::assertEquals('59118.84', $record->getTime());
+        self::assertEquals('5911.884', $record->getTime());
 
         self::assertEquals('39', $record->getPosGender());
+        self::assertEquals(null, $record->getStatus());
+
+
+        $record = $records[47];
+        self::assertEquals('DNF', $record->getStatus());
     }
 
     /**
