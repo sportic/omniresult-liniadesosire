@@ -54,6 +54,15 @@ class ResultsPage extends AbstractScraper
     }
 
     /**
+     * @param $page
+     */
+    public function setPage($page)
+    {
+        $page =  !empty($page) ? $page : 1;
+        $this->setParameter('page', $page);
+    }
+
+    /**
      * @return mixed
      */
     public function getRaceCategoryId()
