@@ -5,7 +5,7 @@ require '../vendor/autoload.php';
 $parameters = [
     'eventId' => '77',
     'raceId' => '184',
-    'page' => 2
+    'page' => 0
 ];
 
 $client = new \Sportic\Omniresult\LiniaDeSosire\LiniaDeSosireClient();
