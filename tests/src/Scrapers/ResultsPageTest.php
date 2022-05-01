@@ -31,7 +31,7 @@ class ResultsPageTest extends AbstractPageTest
         $scrapper->execute();
         $content = $scrapper->getClient()->getResponse()->getContent();
 
-        static::assertContains('Muresan', $content);
+        static::assertStringContainsString('Muresan', $content);
 //        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/ResultsPage/default.json', $content);
     }
 
