@@ -46,7 +46,7 @@ class ResultsPageTest extends AbstractPageTest
             'listname' => 'Result Lists|Gender Results'
         ];
         $params = count($parameters) ? $parameters : $default;
-        $params['raceClient'] = new \Sportic\Omniresult\LiniaDeSosire\RaceResultsClient();
+        $params['raceClient'] = new \Sportic\Omniresult\LiniaDeSosire\LiniaDeSosireClient();
         $scraper = new ResultsPage();
         $scraper->initialize($params);
         return $scraper;

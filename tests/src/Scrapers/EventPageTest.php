@@ -32,8 +32,8 @@ class EventPageTest extends AbstractPageTest
         $scrapper->execute();
         $content = $scrapper->getClient()->getResponse()->getContent();
 
-        static::assertContains('PC 2', $content);
-        static::assertContains('42Km Feminin Open', $content);
+        static::assertStringContainsString('PC 2', $content);
+        static::assertStringContainsString('42Km Feminin Open', $content);
 //        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/EventPage/default.json', $content);
     }
 
