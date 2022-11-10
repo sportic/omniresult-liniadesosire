@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.0|^8.0",
+        "php": "^7.4|^8.0",
         "ext-dom": "*",
         "ext-json": "*",
         "sportic/omniresult-common": "^1.0",
@@ -44,5 +44,13 @@
         ]
     },
     "prefer-stable": true,
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "phpstan/extension-installer": true,
+            "bytic/phpqatools": true
+        }
+    }
 }
