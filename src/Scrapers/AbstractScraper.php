@@ -38,16 +38,18 @@ abstract class AbstractScraper extends \Sportic\Omniresult\Common\Scrapers\Abstr
             'response' => $this->getClient()->getResponse(),
         ];
     }
-
-    /** @noinspection PhpMissingParentCallCommonInspection
-     * @return Client
-     */
-    protected function generateClient()
-    {
-        return ClientFactory::getGoutteClient(
-            HttpClient::create(['verify_peer' => false, 'verify_host' => false])
-        );
-    }
+//
+//    /** @noinspection PhpMissingParentCallCommonInspection
+//     * @return Client
+//     */
+//    protected function generateClient()
+//    {
+//        $client = ClientFactory::getPhantomJsClient();
+//        return $client;
+////        return ClientFactory::getGoutteClient(
+////            HttpClient::create(['verify_peer' => false, 'verify_host' => false])
+////        );
+//    }
 
     /**
      * @return string

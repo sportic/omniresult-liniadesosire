@@ -43,9 +43,9 @@ class EventPage extends AbstractParser
     public function parseEvent($config)
     {
         $event = new Event([
-            'id' => $config['id'],
-            'name' => $config['name'],
-            'city' => $config['location'],
+            'id' => $config['id'] ?? '',
+            'name' => $config['name'] ?? '',
+            'city' => $config['location'] ?? '',
         ]);
 
         $event->setDateFromFormat(DATE_RFC3339_EXTENDED, $config['eventDate']);

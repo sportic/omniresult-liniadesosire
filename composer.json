@@ -19,6 +19,8 @@
         "ext-dom": "*",
         "ext-json": "*",
         "sportic/omniresult-common": "^1.0",
+        "bytic/goutte-phantomjs-bridge": "^1.0",
+        "jonnyw/php-phantomjs": "^5.0.8",
         "bytic/utility": "^1.0"
     },
     "require-dev": {

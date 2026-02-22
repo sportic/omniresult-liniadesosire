@@ -2,6 +2,7 @@
 
 namespace Sportic\Omniresult\LiniaDeSosire\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sportic\Omniresult\LiniaDeSosire\Helper;
 
 /**
@@ -11,10 +12,11 @@ use Sportic\Omniresult\LiniaDeSosire\Helper;
 class HelperTest extends AbstractTest
 {
     /**
+     * @dataProvider dataDurationToSeconds
      * @param $duration
      * @param $result
-     * @dataProvider dataDurationToSeconds
      */
+    #[DataProvider('dataDurationToSeconds')]
     public function testDurationToSeconds($duration, $result)
     {
         self::assertEquals($result, Helper::durationToSeconds($duration));
@@ -23,7 +25,7 @@ class HelperTest extends AbstractTest
     /**
      * @return array
      */
-    public function dataDurationToSeconds()
+    public static function dataDurationToSeconds()
     {
         return [
             ['10012990', '10012.99'],
